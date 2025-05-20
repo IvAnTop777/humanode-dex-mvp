@@ -1,35 +1,43 @@
-import React, { useState } from 'react';
-import { ethers } from 'ethers';
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 
 export default function Home() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   const connectWallet = async () => {
-    if (!window.ethereum) {
-      alert('Установите MetaMask!');
-      return;
-    }
-
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const accounts = await provider.send('eth_requestAccounts', []);
-      setWalletAddress(accounts[0]);
-    } catch (error) {
-      console.error(error);
-      alert('Ошибка подключения кошелька');
+    if (typeof window.ethereum !== "undefined") {
+      try {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        setWalletAddress(accounts[0]);
+      } catch (err) {
+        console.error("Ошибка подключения:", err);
+      }
+    } else {
+      alert("Установите MetaMask");
     }
   };
 
   return (
-    <main style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>Humanode DEX</h1>
+    <div style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
+      <h1>🦊 Humanode DEX MVP</h1>
       {walletAddress ? (
-        <p>Кошелёк подключен: {walletAddress}</p>
+        <p>✅ Подключен: {walletAddress}</p>
       ) : (
-        <button onClick={connectWallet} style={{ padding: '10px 20px', fontSize: '16px' }}>
+        <button
+          onClick={connectWallet}
+          style={{
+            padding: "0.5rem 1rem",
+            fontSize: "16px",
+            backgroundColor: "#f6851b",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
           Подключить кошелёк
         </button>
       )}
-    </main>
+    </div>
   );
 }
