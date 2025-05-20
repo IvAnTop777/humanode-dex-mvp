@@ -2,8 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: "standalone",
-  telemetry: false
+  output: "standalone"
 };
 
 module.exports = nextConfig;
